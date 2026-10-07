@@ -3,6 +3,7 @@ package com.joobin.kopringlab.controller
 import com.joobin.kopringlab.dto.order.Order
 import com.joobin.kopringlab.dto.order.OrderItemResponse
 import com.joobin.kopringlab.dto.order.OrderStatus
+import com.joobin.kopringlab.dto.order.toResponse
 import com.joobin.kopringlab.dto.reqeust.OrderSummaryRequest
 import com.joobin.kopringlab.dto.response.OrderSummaryResponse
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,12 +33,7 @@ fun summarizeOrders(orders: List<Order>): OrderSummaryResponse {
 
     val paidOrders = orders.filter { order -> order.status == OrderStatus.PAID }
 
-    val items = paidOrders.map { order ->
-        OrderItemResponse(
-            order.id,
-            order.productName,
-            order.unitPrice * order.quantity)
-    }
+    val items = paidOrders.map { order -> order.toResponse() }
 
     val totalAmount = items.sumOf { item -> item.amount }
 
